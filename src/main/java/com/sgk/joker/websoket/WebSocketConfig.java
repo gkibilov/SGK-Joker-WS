@@ -47,7 +47,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         					PlayerController.ENDPOINT_GET_ALL_GAMES,
         					PlayerController.ENDPOINT_NEW_GAME,
         					PlayerController.ENDPOINT_ADD_PLAYER,
-        					PlayerController.ENDPOINT_PLAYER_MESSAGE)
+                            PlayerController.ENDPOINT_PLAYER_MESSAGE)
+            .setAllowedOrigins("*")
             // assign a random userId as principal for each websocket client to communicate with a specific client
             //.withSockJS();
         	.setHandshakeHandler(new AssignPrincipalHandshakeHandler()).withSockJS();

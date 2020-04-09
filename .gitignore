@@ -1,2 +1,14 @@
 build
 target
+out
+node_modules
+.vscode-test/
+*.vsix
+*.log
+.*
+dist
+/target/
+/.classpath
+/*.project
+/.settings
+/*.springBeans
