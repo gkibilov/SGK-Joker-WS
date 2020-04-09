@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import com.sgk.joker.websoket.model.Card;
 import com.sgk.joker.websoket.model.Player;
+import com.sgk.joker.websoket.model.Request.PlayerMessage;
 
 public class GameState {
 	
@@ -350,11 +351,11 @@ public class GameState {
 		array[j] = temp;
 	}
 	
-	public PlayerState getPlayerState(String id) {
+	public PlayerState getPlayerState(String id, PlayerMessage.MessageType requestType) {
 		if(!isValidPlayer(id)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
-		return new PlayerState (players.get(id), this);
+		return new PlayerState (players.get(id), this, requestType);
 	}
 	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();

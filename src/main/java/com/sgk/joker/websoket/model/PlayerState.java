@@ -3,6 +3,7 @@ package com.sgk.joker.websoket.model;
 import java.util.List;
 
 import com.sgk.joker.websoket.model.Player;
+import com.sgk.joker.websoket.model.Request.PlayerMessage;
 
 public class PlayerState {
 	
@@ -11,13 +12,24 @@ public class PlayerState {
 	private Player player;
 	
 	private List<Player> opponents;
-
 	
-	public PlayerState(Player player, GameState gameState) {
+	private PlayerMessage.MessageType requestType;
+	
+
+	public PlayerState(Player player, GameState gameState, PlayerMessage.MessageType requestType) {
 		this.player = player;
 		this.state = gameState;
+		this.requestType = requestType;
 		this.opponents = gameState.getOpponents(player.getId());
 		//Collections.sort(opponents);
+	}
+	
+	public PlayerMessage.MessageType getRequestType() {
+		return requestType;
+	}
+	
+	public void setRequestType(PlayerMessage.MessageType requestType) {
+		this.requestType = requestType;
 	}
 
 	public GameState getState() {

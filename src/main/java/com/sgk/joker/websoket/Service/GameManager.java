@@ -17,7 +17,6 @@ import com.sgk.joker.websoket.model.GameState;
 import com.sgk.joker.websoket.model.JokerAction;
 import com.sgk.joker.websoket.model.JokerReaction;
 import com.sgk.joker.websoket.model.Player;
-import com.sgk.joker.websoket.model.PlayerState;
 import com.sgk.joker.websoket.model.Status;
 import com.sgk.joker.websoket.model.Request.PlayerMessage;
 import com.sgk.joker.websoket.model.Request.PlayerMessage.MessageType;
@@ -99,7 +98,7 @@ public class GameManager {
 
 		String id = gs.addPlayer(newPlayerId, name, existingId, pos);	
 		
-		messagingTemplate.convertAndSendToUser(id, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(id));
+		messagingTemplate.convertAndSendToUser(id, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(id, null));
 	}
 
 
@@ -139,17 +138,17 @@ public class GameManager {
 			break;
 		default:
 			throw new IllegalStateException("Not a valid messageType: " + messageType);
-		}
+		}		
 		
-		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(playerId));
+		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(playerId,messageType));
 		
 		for (Player player : gs.getOpponents(playerId)) {//TODO: implement a simple List<String>getOpponentIds(String playerId)
-			messagingTemplate.convertAndSendToUser(player.getId(), WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(player.getId()));
+			messagingTemplate.convertAndSendToUser(player.getId(), WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(player.getId(), messageType));
 		}
 		
 	}
 		
-	private PlayerState startGame(String gameId, String playerId) {
+	private void startGame(String gameId, String playerId) {
 		
 		GameState state = getGame(gameId);
 
@@ -160,11 +159,11 @@ public class GameManager {
 				state.setStatus(Status.DEALT);
 			}
 		}
-		return state.getPlayerState(playerId);
+		//return state.getPlayerState(playerId, PlayerMessage.MessageType.START);
 	}
 	
 
-	private PlayerState action(String gameId, String playerId, 
+	private void action(String gameId, String playerId, 
 							  int cardId, JokerAction jokerAction) {
 
 		GameState state = getGame(gameId);
@@ -175,11 +174,11 @@ public class GameManager {
 		
 		state.action(playerId, cardId, jokerAction);
 		
-		return state.getPlayerState(playerId);
+		//return state.getPlayerState(playerId, PlayerMessage.MessageType.ACTION);
 	}
 	
 
-	private PlayerState reaction(String gameId, String playerId, 
+	private void reaction(String gameId, String playerId, 
 						   		 Integer cardId, JokerReaction jokerReaction) {
 	
 		GameState state = getGame(gameId);
@@ -194,7 +193,7 @@ public class GameManager {
 			expireGame(gameId);
 		}
 
-		return state.getPlayerState(playerId);
+		//return state.getPlayerState(playerId, PlayerMessage.MessageType.REACTION);
 	}	
 
 }
