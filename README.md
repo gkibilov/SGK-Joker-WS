@@ -7,8 +7,8 @@ Websoket+ STOMP based joker game server
 ## Expected behavior
 - Connect to /sgk-joker-ws.connect
 - Users call /app/getAllGames, /app/newGame, /app/addPlayer, /app/playerMessage) with coresponding messages described below
-- The User receives player state to /private/reply: PlayerState
-- The User receives error message to /queue/errors: String
+- The User receives player state to /user/reply: PlayerState
+- The User receives error message to /user/queue/errors: ServerError 
 - All connected users receive list of game infos to /topic/games: List<GameInfo>
 
 ## Request Messages
@@ -75,3 +75,9 @@ public class PlayerState {
 	private Player player;	
 	private List<Player> opponents;
 }
+
+public class ServerError {
+
+	private String message;
+	private String code;
+}	

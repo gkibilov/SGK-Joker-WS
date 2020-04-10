@@ -6,7 +6,7 @@ public class NewGame {
 
 	public NewGame() {
 	}
-
+	
 	public NewGame(String name) {
 		this.name = name;
 	}

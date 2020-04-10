@@ -2,6 +2,10 @@ package com.sgk.joker.websoket.model;
 
 public class Action {
 	
+	public Action() {
+		super();
+	}
+
 	private int cardId;
 	private JokerAction jokerAction;
 	private JokerReaction jokerReaction;

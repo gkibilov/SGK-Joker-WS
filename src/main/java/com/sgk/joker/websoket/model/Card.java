@@ -7,7 +7,10 @@ import com.sgk.joker.websoket.model.CardType;
 
 public class Card implements Comparable<Card>{
 	
-	
+	public Card() {
+		super();
+	}
+
 	public static HashMap <Integer, Card> cardMap = new HashMap<Integer, Card>();
 	static{
 		

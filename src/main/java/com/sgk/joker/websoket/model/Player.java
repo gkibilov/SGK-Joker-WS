@@ -11,6 +11,10 @@ import com.sgk.joker.websoket.model.GameState;
 
 public final class Player {
 	
+	public Player() {
+		super();
+	}
+	
 	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.model.Player");
 	
 	private GameState state;

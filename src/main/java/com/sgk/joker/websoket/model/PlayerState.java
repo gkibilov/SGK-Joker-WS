@@ -6,7 +6,7 @@ import com.sgk.joker.websoket.model.Player;
 import com.sgk.joker.websoket.model.Request.PlayerMessage;
 
 public class PlayerState {
-	
+
 	private GameState state;
 	
 	private Player player;
@@ -15,6 +15,9 @@ public class PlayerState {
 	
 	private PlayerMessage.MessageType requestType;
 	
+	public PlayerState() {
+		super();
+	}
 
 	public PlayerState(Player player, GameState gameState, PlayerMessage.MessageType requestType) {
 		this.player = player;

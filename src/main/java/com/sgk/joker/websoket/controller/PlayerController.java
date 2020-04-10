@@ -20,6 +20,7 @@ import com.sgk.joker.websoket.Service.GameManager;
 import com.sgk.joker.websoket.model.GameInfo;
 import com.sgk.joker.websoket.model.Greeting;
 import com.sgk.joker.websoket.model.HelloMessage;
+import com.sgk.joker.websoket.model.ServerError;
 
 @Controller
 public class PlayerController {
@@ -68,9 +69,11 @@ public class PlayerController {
 	}	
 
     @MessageExceptionHandler
-    @SendToUser(destinations="/queue/errors", broadcast=false)
-    public String handleException(Exception exception) {
-        return exception.getMessage();
+    //@SendToUser(destinations="/queue/errors", broadcast=false)
+    //@SendToUser("/queue/errors")
+    @SendToUser(value = "/queue/errors", broadcast = false)
+    public ServerError handleException(Exception exception) {
+        return new ServerError(exception.toString(), exception.getClass().getName());
     }
 
 }

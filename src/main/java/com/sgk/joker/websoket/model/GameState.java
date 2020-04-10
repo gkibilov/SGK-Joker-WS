@@ -17,6 +17,10 @@ import com.sgk.joker.websoket.model.Request.PlayerMessage;
 
 public class GameState {
 	
+	public GameState() {
+		super();
+	}
+
 	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.model.GameState");
 	
 	Integer testNumCards = null;
@@ -357,6 +361,8 @@ public class GameState {
 		}
 		return new PlayerState (players.get(id), this, requestType);
 	}
+	
+	
 	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();
 		Integer curPlayerPos = null;
@@ -365,14 +371,14 @@ public class GameState {
 		if (players.size() < 2)
 		{
 			if(id.equals("ALL"))
-				opponents.addAll(this.players.values());//return yourself
+				opponents.addAll(this.players.values());//return yourself with id
 			return opponents;
 		}
 		
 		Player[] pa = new Player[4];
 		
 		for (Player p : players.values()) {
-			if(p.getId() != id) {
+			if(p.getId() != id) {//TODO: equals? id used to be long
 				pa[p.getPosition()-1] = p.getOpponentCopy(p);
 			}
 			else
