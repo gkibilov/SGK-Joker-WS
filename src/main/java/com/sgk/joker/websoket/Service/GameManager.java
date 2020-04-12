@@ -149,11 +149,10 @@ public class GameManager {
 		logger.info("Send message to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(playerId,messageType));
 		
-		for (Player player : gs.getOpponents(playerId)) {//TODO: implement a simple List<String>getOpponentIds(String playerId)
-			logger.info("Send message to user: " + player.getId() + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
-			messagingTemplate.convertAndSendToUser(player.getId(), WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(player.getId(), messageType));
+		for (String oId : gs.getOpponentIds(playerId)) {
+			logger.info("Send message to user: " + oId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
+			messagingTemplate.convertAndSendToUser(oId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(oId, messageType));
 		}
-		
 	}
 		
 	private void startGame(String gameId, String playerId) {

@@ -362,23 +362,37 @@ public class GameState {
 		return new PlayerState (players.get(id), this, requestType);
 	}
 	
+
+	public List<String> getOpponentIds(String playerId) {
+		List<String> opponentIds = new ArrayList <String> ();
+		
+		for (Player p : players.values()) {
+			if(p.getId().equals(playerId)) {
+				opponentIds.add(p.getId());
+			}
+		}
+		
+		return opponentIds;
+	}	
 	
 	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();
 		Integer curPlayerPos = null;
 		
 		//return empty list if this is the only player
-		if (players.size() < 2)
+		if (players.size() <= 1)
 		{
-			if(id.equals("ALL"))
-				opponents.addAll(this.players.values());//return yourself with id
+			if(id.equals("ALL") && players.size() == 1) {
+				Player p = (Player)this.players.values().toArray()[0];
+				opponents.add(p.getOpponentCopy(p));
+			}
 			return opponents;
 		}
 		
 		Player[] pa = new Player[4];
 		
 		for (Player p : players.values()) {
-			if(p.getId() != id) {//TODO: equals? id used to be long
+			if(!p.getId().equals(id)) {
 				pa[p.getPosition()-1] = p.getOpponentCopy(p);
 			}
 			else
@@ -407,8 +421,7 @@ public class GameState {
 				opponents.add(pa[1]);
 				opponents.add(pa[2]);
 				break;
-			}
-			
+			}			
 		}
 		else
 			return Arrays.asList(pa);
