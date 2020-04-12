@@ -3,6 +3,8 @@ package com.sgk.joker.websoket.controller;
 import java.security.Principal;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +26,8 @@ import com.sgk.joker.websoket.model.ServerError;
 
 @Controller
 public class PlayerController {
+	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.controller.PlayerController");
 	
 	public static final String SUBSCRIBE_TOPIC_GAMES = "/topic/games";//should this be a queue?
 	
@@ -59,6 +63,9 @@ public class PlayerController {
 	@MessageMapping(ENDPOINT_ADD_PLAYER)
 	@SendTo(SUBSCRIBE_TOPIC_GAMES)
 	public  List<GameInfo> addPlayer(@Payload AddPlayer addPlayer, Principal principal) {
+		
+		logger.info("addPlayer :" + addPlayer.getName() + " principal :" + principal.getName());
+		
 		gameManager.addPlayer(principal.getName(), addPlayer.getGameId(), addPlayer.getName(), addPlayer.getExistingId(), addPlayer.getPos());
 		return gameManager.getAllGames();
 	}	

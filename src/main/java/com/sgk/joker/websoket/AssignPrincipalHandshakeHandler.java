@@ -1,5 +1,7 @@
 package com.sgk.joker.websoket;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
@@ -22,6 +24,8 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 	
 	private static Set<String> uniqueUserId = new HashSet<String>();
 	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.AssignPrincipalHandshakeHandler");
+	
 	@Override
 	protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
 			Map<String, Object> attributes) {
@@ -29,8 +33,10 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 		if (!attributes.containsKey(ATTR_PRINCIPAL)) {
 			name = generateUniqueUserId();
 			attributes.put(ATTR_PRINCIPAL, name);
+			logger.info("determineUser for principal " + request.getPrincipal() + " gennerated new id: " + name);
 		} else {
 			name = (String) attributes.get(ATTR_PRINCIPAL);
+			logger.info("determineUser for principal " + request.getPrincipal() + " reuse id: " + name);
 		}
 		return new Principal() {
 			@Override

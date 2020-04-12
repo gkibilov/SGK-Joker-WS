@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ import com.sgk.joker.websoket.model.Request.PlayerMessage.MessageType;
 
 @Service
 public class GameManager {
+	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.model.Service.GameManager");
 	
 	static int MAX_GAMES = 10;
 	//static private Map<String, GameState> games = new ConcurrentHashMap<String, GameState>();
@@ -98,6 +102,8 @@ public class GameManager {
 
 		String id = gs.addPlayer(newPlayerId, name, existingId, pos);	
 		
+		logger.info("Send message to user: " + id + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
+		
 		messagingTemplate.convertAndSendToUser(id, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(id, null));
 	}
 
@@ -140,9 +146,11 @@ public class GameManager {
 			throw new IllegalStateException("Not a valid messageType: " + messageType);
 		}		
 		
+		logger.info("Send message to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(playerId,messageType));
 		
 		for (Player player : gs.getOpponents(playerId)) {//TODO: implement a simple List<String>getOpponentIds(String playerId)
+			logger.info("Send message to user: " + player.getId() + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 			messagingTemplate.convertAndSendToUser(player.getId(), WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(player.getId(), messageType));
 		}
 		
