@@ -1,5 +1,7 @@
 package com.sgk.joker.websoket.controller;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.security.Principal;
 import java.util.List;
 
@@ -80,8 +82,8 @@ public class PlayerController {
     //@SendToUser("/queue/errors")
     @SendToUser(value = "/queue/errors", broadcast = false)
     public ServerError handleException(Exception exception) {
-    	logger.error(exception);
-        return new ServerError(exception.toString(), exception.getClass().getName());
+    	logger.error(exception.getMessage(), exception);  
+      return new ServerError(exception.toString(), exception.getClass().getName());
     }
 
 }
