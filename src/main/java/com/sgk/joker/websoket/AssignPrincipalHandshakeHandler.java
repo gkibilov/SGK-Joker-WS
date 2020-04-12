@@ -28,8 +28,8 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 	
 	private static Set<String> uniqueUserId = new HashSet<String>();
 	
-	private static Map<String, String> sessionTOUser = new HashMap<String, String>();
-	
+	//TODO remove session on game  eviction
+	private static Map<String, String> sessionTOUser = new HashMap<String, String>();	
 	
 	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.AssignPrincipalHandshakeHandler");
 	
@@ -51,13 +51,13 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 				if(sessionTOUser.get(session.getId()) != null) {
 					name = sessionTOUser.get(session.getId());
 					attributes.put(ATTR_PRINCIPAL, name);
-					logger.info("determineUser for principal " + request.getPrincipal() + " reuse id: " + name + " for session: " + session.getId());
+					logger.info("determineUser for sessioon " + session.getId() + " reuse id: " + name);
 				}
 				else {	
 					name = generateUniqueUserId();
 					sessionTOUser.put(session.getId(), name);
 					attributes.put(ATTR_PRINCIPAL, name);
-					logger.info("determineUser for principal " + request.getPrincipal() + " gennerated new id: " + name);
+					logger.info("determineUser gennerated new id: " + name);
 				}
 				
 			}
@@ -68,7 +68,7 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 		}
 		else {
 			name = "unknown";
-			logger.info("determineUser for principal " + request.getPrincipal() + " reuse id: " + name);
+			logger.warn("determineUser for principal " + request.getPrincipal() + " id: " + name);
 		}
 		
 		return new Principal() {

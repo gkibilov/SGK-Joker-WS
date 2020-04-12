@@ -80,6 +80,7 @@ public class PlayerController {
     //@SendToUser("/queue/errors")
     @SendToUser(value = "/queue/errors", broadcast = false)
     public ServerError handleException(Exception exception) {
+    	logger.error(exception);
         return new ServerError(exception.toString(), exception.getClass().getName());
     }
 
