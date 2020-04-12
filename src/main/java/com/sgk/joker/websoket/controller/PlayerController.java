@@ -82,8 +82,9 @@ public class PlayerController {
     //@SendToUser("/queue/errors")
     @SendToUser(value = "/queue/errors", broadcast = false)
     public ServerError handleException(Exception exception) {
-    	logger.error(exception.getMessage(), exception);  
-      return new ServerError(exception.toString(), exception.getClass().getName());
+    	String errMsg = exception.getMessage();
+    	logger.error(errMsg != null ? errMsg : exception.toString(), exception);   
+        return new ServerError(errMsg != null ? errMsg : exception.toString(), exception.getClass().getName());
     }
 
 }
