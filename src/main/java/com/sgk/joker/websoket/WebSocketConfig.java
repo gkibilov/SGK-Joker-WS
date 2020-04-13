@@ -24,9 +24,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public static final String ENDPOINT_CONNECT = "/sgk-joker-ws.connect";
     
     public static final String SUBSCRIBE_USER_REPLY = "/reply";
-    public static final String SUBSCRIBE_USER_PREFIX = "/private";
-
-
+    //public static final String SUBSCRIBE_USER_PREFIX = "/private";
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -38,11 +36,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
     	
-    	//registry.addEndpoint("/sgk-joker-ws").withSockJS();
-//    	public static final String ENDPOINT_GET_ALL_GAMES = "/getAllGames";
-//    	public static final String ENDPOINT_NEW_GAME = "/newGame";
-//    	public static final String ENDPOINT_ADD_PLAYER = "/addPlayer";
-//    	public static final String ENDPOINT_PLAYER_MESSAGE = "/playerMessage";
         registry.addEndpoint(ENDPOINT_CONNECT, 
         					PlayerController.ENDPOINT_GET_ALL_GAMES,
         					PlayerController.ENDPOINT_NEW_GAME,
@@ -50,8 +43,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             PlayerController.ENDPOINT_PLAYER_MESSAGE)
             .setAllowedOrigins("*")
             // assign a random userId as principal for each websocket client to communicate with a specific client
-            //.withSockJS();
-        	//.setHandshakeHandler(new AssignPrincipalHandshakeHandler()).withSockJS();
             .setHandshakeHandler(new AssignPrincipalHandshakeHandler())
         	.addInterceptors(new HttpHandshakeInterceptor()).withSockJS();
     }

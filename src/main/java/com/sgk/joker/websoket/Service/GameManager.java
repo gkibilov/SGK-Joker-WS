@@ -18,7 +18,6 @@ import com.sgk.joker.websoket.model.GameInfo;
 import com.sgk.joker.websoket.model.GameState;
 import com.sgk.joker.websoket.model.JokerAction;
 import com.sgk.joker.websoket.model.JokerReaction;
-import com.sgk.joker.websoket.model.Player;
 import com.sgk.joker.websoket.model.Status;
 import com.sgk.joker.websoket.model.Request.PlayerMessage;
 import com.sgk.joker.websoket.model.Request.PlayerMessage.MessageType;

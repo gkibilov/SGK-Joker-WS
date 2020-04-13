@@ -21,8 +21,6 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 			Map<String, Object> attributes) throws Exception {
 		if (request instanceof ServletServerHttpRequest) {
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-			//HttpSession session = servletRequest.getServletRequest().getSession();
-			//attributes.put("sessionId", session.getId());
 			String authToken = servletRequest.getServletRequest().getParameter("auth_token");
 			logger.info("HttpHandshakeInterceptor.beforeHandshake auth_token: " +  authToken);
 			if(!StringUtils.isEmpty(authToken) && !authToken.equalsIgnoreCase("undefined")) {
@@ -31,15 +29,15 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 			return true;
 		}
 		
+		logger.warn("HttpHandshakeInterceptor.beforeHandshake non ServletServerHttpRequest");
+		
 		return false;
 	}
-	
 
 	@Override
 	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
 			Exception exception) {
-		//TODO: log something interesting		
+		// TODO Auto-generated method stub
+		
 	}
-
-
 }

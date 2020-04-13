@@ -8,16 +8,13 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import javax.servlet.http.HttpSession;
-
 /**
- * Assign a random username as principal for each websocket client. This is
+ * Assign a unique username as principal for each websocket client. This is
  * needed to be able to communicate with a specific client.
  */
 public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
@@ -28,9 +25,6 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 	
 	private static Set<String> uniqueUserId = new HashSet<String>();
 	
-	//TODO remove session on game  eviction
-	private static Map<String, String> sessionTOUser = new HashMap<String, String>();	
-	
 	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.AssignPrincipalHandshakeHandler");
 	
 	@Override
@@ -39,35 +33,21 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 		
 		final String name;
 		
-		HttpSession session = null;
-		
 		if (request instanceof ServletServerHttpRequest) {
-			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-			
-			session = servletRequest.getServletRequest().getSession();
-			logger.info("determineUser for session id: " + session.getId());
 
 			if (!attributes.containsKey(ATTR_PRINCIPAL)) {				
-				if(sessionTOUser.get(session.getId()) != null) {
-					name = sessionTOUser.get(session.getId());
-					attributes.put(ATTR_PRINCIPAL, name);
-					logger.info("determineUser for sessioon " + session.getId() + " reuse id: " + name);
-				}
-				else {	
-					name = generateUniqueUserId();
-					sessionTOUser.put(session.getId(), name);
-					attributes.put(ATTR_PRINCIPAL, name);
-					logger.info("determineUser gennerated new id: " + name);
-				}				
+				name = generateUniqueUserId();
+				attributes.put(ATTR_PRINCIPAL, name);
+				logger.info("AssignPrincipalHandshakeHandler.determineUser gennerated new: " + name);						
 			}
 			else {
-					name = (String) attributes.get(ATTR_PRINCIPAL);
-					logger.info("determineUser for principal " + request.getPrincipal() + " reuse id: " + name);
+				name = (String) attributes.get(ATTR_PRINCIPAL);
+				logger.info("AssignPrincipalHandshakeHandler.determineUser use existing: " + name);
 			}
 		}
 		else {
-			name = "unknown";
-			logger.warn("determineUser for principal " + request.getPrincipal() + " id: " + name);
+			name = "undefined";
+			logger.warn("AssignPrincipalHandshakeHandler.determineUser not ServletServerHttpRequest principal name will be undefined");
 		}
 		
 		return new Principal() {
@@ -77,11 +57,6 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 			}
 		};
 	}	
-	
-	synchronized static public void setUserId(String sessionId, String userId) {
-		sessionTOUser.put(sessionId, userId);
-	}
-	
 	
 	synchronized private String generateUniqueUserId() {
 		String uid = null;
