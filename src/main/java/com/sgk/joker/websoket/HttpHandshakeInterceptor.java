@@ -27,9 +27,10 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 			logger.info("HttpHandshakeInterceptor.beforeHandshake auth_token: " +  authToken);
 			if(!StringUtils.isEmpty(authToken) && !authToken.equalsIgnoreCase("undefined")) {
 				attributes.put(AssignPrincipalHandshakeHandler.ATTR_PRINCIPAL, authToken);
-				return true;
 			}
+			return true;
 		}
+		
 		return false;
 	}
 	
