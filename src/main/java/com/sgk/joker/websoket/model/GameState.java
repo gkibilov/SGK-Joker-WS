@@ -367,7 +367,7 @@ public class GameState {
 		List<String> opponentIds = new ArrayList <String> ();
 		
 		for (Player p : players.values()) {
-			if(p.getId().equals(playerId)) {
+			if(!p.getId().equals(playerId)) {
 				opponentIds.add(p.getId());
 			}
 		}
