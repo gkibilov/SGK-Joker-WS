@@ -114,7 +114,7 @@ public class GameManager {
 		
 		GameState gs = getGame(gameId);//throws exception if game is not found
 		
-		String playerId = playerMessage.getPayerId();
+		String playerId = playerMessage.getPlayerId();
 			
 		if(!gs.isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
