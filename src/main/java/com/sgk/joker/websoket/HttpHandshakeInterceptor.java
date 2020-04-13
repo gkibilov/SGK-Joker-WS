@@ -17,13 +17,14 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 			Map<String, Object> attributes) throws Exception {
 		if (request instanceof ServletServerHttpRequest) {
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-			HttpSession session = servletRequest.getServletRequest().getSession();
-			attributes.put("sessionId", session.getId());
+			//HttpSession session = servletRequest.getServletRequest().getSession();
+			//attributes.put("sessionId", session.getId());
+			attributes.put(AssignPrincipalHandshakeHandler.ATTR_PRINCIPAL, servletRequest.getServletRequest().getParameter("auth_token"));
 			return true;
-
 		}
 		return false;
 	}
+	
 
 	@Override
 	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,

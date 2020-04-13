@@ -51,8 +51,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             .setAllowedOrigins("*")
             // assign a random userId as principal for each websocket client to communicate with a specific client
             //.withSockJS();
-        	.setHandshakeHandler(new AssignPrincipalHandshakeHandler()).withSockJS();
-        	//.addInterceptors(new HttpHandshakeInterceptor()).withSockJS();
+        	//.setHandshakeHandler(new AssignPrincipalHandshakeHandler()).withSockJS();
+            .setHandshakeHandler(new AssignPrincipalHandshakeHandler())
+        	.addInterceptors(new HttpHandshakeInterceptor()).withSockJS();
     }
 
     // various listeners for debugging purpose
