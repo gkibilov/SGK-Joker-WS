@@ -25,7 +25,7 @@ public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 			//attributes.put("sessionId", session.getId());
 			String authToken = servletRequest.getServletRequest().getParameter("auth_token");
 			logger.info("HttpHandshakeInterceptor.beforeHandshake auth_token: " +  authToken);
-			if(!StringUtils.isEmpty(authToken)) {
+			if(!StringUtils.isEmpty(authToken) || !authToken.equalsIgnoreCase("undefined")) {
 				attributes.put(AssignPrincipalHandshakeHandler.ATTR_PRINCIPAL, authToken);
 				return true;
 			}
