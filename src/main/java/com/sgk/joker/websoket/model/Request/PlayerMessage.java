@@ -18,7 +18,7 @@ public class PlayerMessage {
 	MessageType type;
 	
 	private String gameId;
-	private String payerId;
+	private String playerId;
 	
 	private CardSuite kozyrSuite;
 	
@@ -86,12 +86,12 @@ public class PlayerMessage {
 		this.gameId = gameId;
 	}
 
-	public String getPayerId() {
-		return payerId;
+	public String getPlayerId() {
+		return playerId;
 	}
 
-	public void setPayerId(String payerId) {
-		this.payerId = payerId;
+	public void setPlayerId(String playerId) {
+		this.playerId = playerId;
 	}
 
 	public String getMessage() {

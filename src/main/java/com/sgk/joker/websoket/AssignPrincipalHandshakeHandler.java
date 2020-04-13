@@ -10,6 +10,7 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -43,6 +44,7 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 		
 		if (request instanceof ServletServerHttpRequest) {
 			ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+			
 			session = servletRequest.getServletRequest().getSession();
 			logger.info("determineUser for session id: " + session.getId());
 
@@ -52,6 +54,13 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 					name = sessionTOUser.get(session.getId());
 					attributes.put(ATTR_PRINCIPAL, name);
 					logger.info("determineUser for sessioon " + session.getId() + " reuse id: " + name);
+				}
+				else if (request.getHeaders().containsKey("USER_ID")) {
+					List<String> hVals = request.getHeaders().get("USER_ID");
+					name = 	hVals.get(0);
+					sessionTOUser.put(session.getId(), name);
+					attributes.put(ATTR_PRINCIPAL, name);
+					logger.info("determineUser gennerated new id: " + name);					
 				}
 				else {	
 					name = generateUniqueUserId();
@@ -78,6 +87,8 @@ public class AssignPrincipalHandshakeHandler extends DefaultHandshakeHandler {
 			}
 		};
 	}
+	
+	
 	
 	synchronized private String generateUniqueUserId() {
 		String uid = null;
