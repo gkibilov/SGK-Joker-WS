@@ -1,6 +1,7 @@
 package com.sgk.joker.websoket.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -46,7 +47,7 @@ public class GameManager {
 	
 	private static Random random =  new Random();
 
-	public GameState newGame(String name) {
+	public GameState newGame(String name, Boolean isPrivate, String  playerId) {
 		if (games.size() >= 10)
 			throw new IllegalStateException("Max number of games is running, please try again later!");
 		
@@ -59,7 +60,13 @@ public class GameManager {
 		GameState game = new GameState();
 		game.setGameId(gameId);
 		game.setGameName(name);
+		game.setPrivate(isPrivate);
 		games.put(gameId, game);
+		
+		if(isPrivate) {
+			logger.info("Send gameInfo to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_PRIVATE);
+			messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_PRIVATE, new GameInfo(game));
+		}
 		
 		return game;
 	}
@@ -77,6 +84,11 @@ public class GameManager {
 		
 		return game;
 	}
+	
+	public void getPrivateGame(String gameId, String playerId) {
+		logger.info("Send gameInfo to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_PRIVATE);
+		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_PRIVATE, new GameInfo(getGame(gameId)));
+	}	
 
 	public void expireGame(String gameId) {
 		GameState game = (GameState) games.getIfPresent(gameId);
@@ -89,13 +101,16 @@ public class GameManager {
 		List<GameInfo> gi = new ArrayList<GameInfo>();
 		
 		for ( Object gs: games.asMap().values()) {
-			gi.add(new GameInfo((GameState) gs));
+			if(!((GameState) gs).isPrivate())
+				gi.add(new GameInfo((GameState) gs));
 		}
 
+		Collections.sort(gi);
+		
 		return gi;
 	}
 	
-	public void addPlayer (String newPlayerId, String gameId, String name, String existingId, Integer pos) {
+	public boolean addPlayer (String newPlayerId, String gameId, String name, String existingId, Integer pos) {
 		
 		GameState gs = getGame(gameId);
 
@@ -104,6 +119,16 @@ public class GameManager {
 		logger.info("Send message to user: " + id + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 		
 		messagingTemplate.convertAndSendToUser(id, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(id, null));
+		
+		if(gs.isPrivate()) {
+			GameInfo gi = new GameInfo(gs);
+			for (String oId : gs.getOpponentIds(id)) {
+				logger.info("Send gameInfo to user: " + oId + " at " + WebSocketConfig.SUBSCRIBE_USER_PRIVATE);
+				messagingTemplate.convertAndSendToUser(oId, WebSocketConfig.SUBSCRIBE_USER_PRIVATE, gi);
+			}			
+		}
+		
+		return gs.isPrivate();
 	}
 
 
@@ -200,6 +225,6 @@ public class GameManager {
 		}
 
 		//return state.getPlayerState(playerId, PlayerMessage.MessageType.REACTION);
-	}	
+	}
 
 }

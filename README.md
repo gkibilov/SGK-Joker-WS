@@ -6,8 +6,9 @@ Websoket+ STOMP based joker game server
 
 ## Expected behavior
 - Connect to /sgk-joker-ws.connect
-- Users call /app/getAllGames, /app/newGame, /app/addPlayer, /app/playerMessage) with coresponding messages described below
+- Users call /app/getAllGames, /app/newGame, /app/privateGame, /app/addPlayer, /app/playerMessage) with coresponding messages described below
 - The User receives player state to /user/reply: PlayerState
+- The User receives private GameInfo to /user/private: GameInfo
 - The User receives error message to /user/queue/errors: ServerError 
 - All connected users receive list of game infos to /topic/games: List<GameInfo>
 
@@ -15,6 +16,11 @@ Websoket+ STOMP based joker game server
 
 public class NewGame {
 	private String name;
+	private Boolean isPrivate = false;
+}
+
+public class GetPrivateGame {
+	private String gameId;
 }
 
 public class AddPlayer {	

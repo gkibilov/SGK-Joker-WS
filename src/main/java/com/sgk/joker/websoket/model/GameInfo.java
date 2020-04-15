@@ -2,8 +2,33 @@ package com.sgk.joker.websoket.model;
 
 import java.util.List;
 
-public class GameInfo {
+public class GameInfo implements Comparable <GameInfo>{
 	
+	private String gameId;
+	private String gameName;
+	
+	private int roundNumber = 0;	
+	
+	private Status status = Status.NOT_STARTED;
+	
+	private List<Player> players;
+	
+
+	public GameInfo(GameState gs) {
+		this.gameId = gs.getGameId();
+		this.gameName = gs.getGameName();
+		this.roundNumber = gs.getRoundNumber();
+		this.status = gs.getStatus();
+		
+		this.players = gs.getOpponents("ALL");
+		
+	}
+
+	@Override
+	public int compareTo(GameInfo o) {
+		return o.gameId.compareTo(this.gameId);
+	}
+
 	public String getGameId() {
 		return gameId;
 	}
@@ -42,26 +67,6 @@ public class GameInfo {
 
 	public void setPlayers(List<Player> players) {
 		this.players = players;
-	}
-
-	private String gameId;
-	private String gameName;
-	
-	private int roundNumber = 0;	
-	
-	private Status status = Status.NOT_STARTED;
-	
-	private List<Player> players;
-	
-
-	public GameInfo(GameState gs) {
-		this.gameId = gs.getGameId();
-		this.gameName = gs.getGameName();
-		this.roundNumber = gs.getRoundNumber();
-		this.status = gs.getStatus();
-		
-		this.players = gs.getOpponents("ALL");
-		
 	}
 
 }

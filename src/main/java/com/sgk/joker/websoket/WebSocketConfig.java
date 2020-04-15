@@ -24,11 +24,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public static final String ENDPOINT_CONNECT = "/sgk-joker-ws.connect";
     
     public static final String SUBSCRIBE_USER_REPLY = "/reply";
-    //public static final String SUBSCRIBE_USER_PREFIX = "/private";
+    public static final String SUBSCRIBE_USER_PRIVATE = "/private";
     
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry config) {
-		config.enableSimpleBroker("/topic","/queue", SUBSCRIBE_USER_REPLY);
+		config.enableSimpleBroker("/topic","/queue", SUBSCRIBE_USER_REPLY, SUBSCRIBE_USER_PRIVATE);
 		//config.setUserDestinationPrefix(SUBSCRIBE_USER_PREFIX);
 		config.setApplicationDestinationPrefixes("/app");
 	}
@@ -39,6 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint(ENDPOINT_CONNECT, 
         					PlayerController.ENDPOINT_GET_ALL_GAMES,
         					PlayerController.ENDPOINT_NEW_GAME,
+        					PlayerController.ENDPOINT_PRIVATE_GAME,
         					PlayerController.ENDPOINT_ADD_PLAYER,
                             PlayerController.ENDPOINT_PLAYER_MESSAGE)
             .setAllowedOrigins("*")

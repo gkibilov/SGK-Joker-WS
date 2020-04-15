@@ -33,6 +33,7 @@ public class PlayerController {
 	
 	public static final String ENDPOINT_GET_ALL_GAMES = "/getAllGames";
 	public static final String ENDPOINT_NEW_GAME = "/newGame";
+	public static final String ENDPOINT_PRIVATE_GAME = "/privateGame";
 	public static final String ENDPOINT_ADD_PLAYER = "/addPlayer";
 	public static final String ENDPOINT_PLAYER_MESSAGE = "/playerMessage";
 
@@ -55,9 +56,14 @@ public class PlayerController {
 
 	@MessageMapping(ENDPOINT_NEW_GAME)
 	@SendTo(SUBSCRIBE_TOPIC_GAMES)
-	public  List<GameInfo> newGame(NewGame message) {		
-		gameManager.newGame(message.getName());
-		return gameManager.getAllGames();		
+	public  List<GameInfo> newGame(NewGame message, Principal principal) {		
+		gameManager.newGame(message.getName(), message.isPrivate(), principal.getName());
+		return message.isPrivate() ? null : gameManager.getAllGames();		
+	}
+	
+	@MessageMapping(ENDPOINT_PRIVATE_GAME)
+	public  void getPrivateGame(String gameId, Principal principal) {		
+		gameManager.getPrivateGame(gameId, principal.getName());
 	}
 	
 	@MessageMapping(ENDPOINT_ADD_PLAYER)
@@ -66,8 +72,9 @@ public class PlayerController {
 		
 		logger.info("addPlayer :" + addPlayer.getName() + " principal :" + principal.getName());
 		
-		gameManager.addPlayer(principal.getName(), addPlayer.getGameId(), addPlayer.getName(), addPlayer.getExistingId(), addPlayer.getPos());
-		return gameManager.getAllGames();
+		boolean isPrivate = 
+				gameManager.addPlayer(principal.getName(), addPlayer.getGameId(), addPlayer.getName(), addPlayer.getExistingId(), addPlayer.getPos());
+		return isPrivate ? null : gameManager.getAllGames();
 	}	
 	
 	@MessageMapping(ENDPOINT_PLAYER_MESSAGE)

@@ -17,11 +17,11 @@ import com.sgk.joker.websoket.model.Request.PlayerMessage;
 
 public class GameState {
 	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.model.GameState");
+	
 	public GameState() {
 		super();
 	}
-
-	protected final Log logger = LogFactory.getLog("com.sgk.joker.websoket.model.GameState");
 	
 	Integer testNumCards = null;
 	
@@ -29,6 +29,7 @@ public class GameState {
 	
 	private String gameId;
 	private String gameName;
+	private Boolean isPrivate = false;
 	
 	private int roundNumber = 0;
 	
@@ -61,6 +62,14 @@ public class GameState {
 		this.messages = messages;
 	}
 	
+	public Boolean isPrivate() {
+		return isPrivate;
+	}
+
+	public void setPrivate(Boolean isPrivate) {
+		this.isPrivate = isPrivate;
+	}
+
 	synchronized public void addMessage(String message) {
 		if (messages.size() > 100) {
 			messages.remove(0);
@@ -652,6 +661,8 @@ public class GameState {
 		this.testNumCards = numCards;
 		return this.gameId;
 	}
+
+
 
 /*	
 	public void fastForward(PlayerController cntrl, Integer roundNumber) {
