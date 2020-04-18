@@ -37,6 +37,8 @@ public class GameState {
 	
 	private int numCards = 0;
 	
+	private int dealerPosition = 0;
+	
 	private int actingPlayerPosition = 0;
 	
 	private int currentTurnPosition = 0;
@@ -70,6 +72,13 @@ public class GameState {
 		version++;
 	}
 	
+	public int getDealerPosition() {
+		return dealerPosition;
+	}
+
+	public void setDealerPosition(int dealerPosition) {
+		this.dealerPosition = dealerPosition;
+	}
 	
 	public List<Integer> getCardNumbers() {
 		return cardNumbers;
@@ -293,8 +302,9 @@ public class GameState {
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
 		currentTurnPosition = actingPlayerPosition;
 		
-		this.currentPlay.setKozyr(null);
+		dealerPosition = actingPlayerPosition == 1 ? 4 : actingPlayerPosition -1;
 		
+		this.currentPlay.setKozyr(null);
 		
 		if(c == null) {
 			c = new int[36];
