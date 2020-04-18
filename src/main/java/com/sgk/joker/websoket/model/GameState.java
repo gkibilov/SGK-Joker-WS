@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
+import com.sgk.joker.websoket.Service.GameManager;
 import com.sgk.joker.websoket.model.Card;
 import com.sgk.joker.websoket.model.Player;
 import com.sgk.joker.websoket.model.Request.PlayerMessage;
@@ -31,9 +32,7 @@ public class GameState {
 	private String gameName;
 	
 	private int roundNumber = 0;
-	
-	private int prevRoundNumber = 0;
-	private int [] prevAssignment = null;		
+		
 	
 	private int numCards = 0;
 	
@@ -277,22 +276,8 @@ public class GameState {
 	}
 	
 	public void assignCards() {
-		assignCards(false, null, null);
-	}
-
-	public void assignCards(boolean revert, int c[], Integer rn) {
 		
-		if(revert) {
-			rn = this.prevRoundNumber;
-			c = this.prevAssignment;
-		}
-		
-		if(rn == null) {
-			prevRoundNumber = roundNumber;
-			roundNumber++;
-		}
-		else
-			roundNumber = rn;
+		roundNumber++;
 		
 		if(roundNumber > 1) {
 			this.prevPlay = new PlayState(currentPlay);
@@ -306,14 +291,10 @@ public class GameState {
 		
 		this.currentPlay.setKozyr(null);
 		
-		if(c == null) {
-			c = new int[36];
-			for (int i = 0; i<36; i++)
-				c[i]=i+1;
-			shuffle(c);
-		}
-		
-		this.prevAssignment = c;
+		int c[] = new int[36];
+		for (int i = 0; i<36; i++)
+			c[i]=i+1;
+		shuffle(c);
 		
 		if (roundNumber <= 8)
 			numCards = roundNumber;
@@ -321,14 +302,6 @@ public class GameState {
 			numCards = 9;
 		else
 			numCards = 21 - roundNumber;
-		
-		
-		//TODO remove after testing
-		if (testNumCards != null) {
-			numCards = testNumCards;
-			if (testNumCards < 9)
-				testNumCards++;
-		}
 		
 		cardNumbers.add(numCards);
 		
@@ -663,8 +636,8 @@ public class GameState {
 		return this.gameId;
 	}
 
-/*	
-	public void fastForward(PlayerController cntrl, Integer roundNumber) {
+	
+	public void fastForward(GameManager gm, Integer roundNumber) {
 		
 		if (this.status == Status.NOT_STARTED || this.status == Status.GAME_OVER) 
 			throw new IllegalStateException("You can only fast forward a started game! Current State is: " + this.status); 
@@ -689,10 +662,10 @@ public class GameState {
 					try {						
 						if (this.getKozyr() == null) {							
 							logger.info("Fast Forward iterration set kozyr");
-							cntrl.setKozyr(gameId, p.getId(), CardSuite.BEZ);
+							this.setKozyr(p.getId(), CardSuite.BEZ);
 						}
 	
-						cntrl.call(gameId, p.getId(), this.getNumCards()/2);
+						this.call(p.getId(), this.getNumCards()/2);
 						
 					} catch (Exception e)
 					{
@@ -714,12 +687,13 @@ public class GameState {
 						try {
 							if((this.status == Status.CALLS_MADE || this.status == Status.PLAY_DONE) && p.getPosition() == this.getActingPlayerPosition()) {	
 								actionMade = true;
-								cntrl.action(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
+								gm.action(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
+								
 								logger.info("Fast Forward made action " + p.getName());
 							}
 							else if (p.getPosition() == this.currentTurnPosition) {
 									actionMade = true;
-									cntrl.reaction(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
+									gm.reaction(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
 									logger.info("Fast Forward made reaction " + p.getName());
 							}
 						} catch (Exception e) {
@@ -739,5 +713,4 @@ public class GameState {
 			
 		}//while roundNumber
 	}
-*/
 }

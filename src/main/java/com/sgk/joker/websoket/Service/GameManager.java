@@ -101,7 +101,7 @@ public class GameManager {
 
 		String id = gs.addPlayer(newPlayerId, name, existingId, pos);	
 		
-		logger.info("Send message to user: " + id + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
+		//logger.info("Send message to user: " + id + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 		
 		messagingTemplate.convertAndSendToUser(id, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(id, null));
 	}
@@ -118,7 +118,6 @@ public class GameManager {
 		if(!gs.isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
-		
 		
 		MessageType messageType = playerMessage.getType();
 		
@@ -141,15 +140,18 @@ public class GameManager {
 		case MESSAGE:
 			gs.addMessage(playerMessage.getMessage());
 			break;
+		case FF:
+			gs.fastForward(this, playerMessage.getRoundNumber());
+			break;
 		default:
 			throw new IllegalStateException("Not a valid messageType: " + messageType);
 		}		
 		
-		logger.info("Send message to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
+		//logger.info("Send message to user: " + playerId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 		messagingTemplate.convertAndSendToUser(playerId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(playerId,messageType));
 		
 		for (String oId : gs.getOpponentIds(playerId)) {
-			logger.info("Send message to user: " + oId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
+			//logger.info("Send message to user: " + oId + " at " + WebSocketConfig.SUBSCRIBE_USER_REPLY);
 			messagingTemplate.convertAndSendToUser(oId, WebSocketConfig.SUBSCRIBE_USER_REPLY, gs.getPlayerState(oId, messageType));
 		}
 	}
@@ -169,7 +171,7 @@ public class GameManager {
 	}
 	
 
-	private void action(String gameId, String playerId, 
+	public void action(String gameId, String playerId, 
 							  int cardId, JokerAction jokerAction) {
 
 		GameState state = getGame(gameId);
@@ -184,7 +186,7 @@ public class GameManager {
 	}
 	
 
-	private void reaction(String gameId, String playerId, 
+	public void reaction(String gameId, String playerId, 
 						   		 Integer cardId, JokerReaction jokerReaction) {
 	
 		GameState state = getGame(gameId);

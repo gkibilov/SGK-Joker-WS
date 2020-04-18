@@ -12,7 +12,8 @@ public class PlayerMessage {
 		SET_KOZYR,
 		ACTION,
 		REACTION,
-		MESSAGE
+		MESSAGE,
+		FF
 	}
 	
 	MessageType type;
@@ -24,11 +25,21 @@ public class PlayerMessage {
 	
 	private Integer wantQty;
 	
+	private Integer roundNumber;
+
 	private Integer cardId;
 	private JokerReaction jokerReaction;
 	private JokerAction jokerAction;
 	
 	private String message;
+	
+	public Integer getRoundNumber() {
+		return roundNumber;
+	}
+
+	public void setRoundNumber(Integer roundNumber) {
+		this.roundNumber = roundNumber;
+	}
 	
 	public MessageType getType() {
 		return type;
