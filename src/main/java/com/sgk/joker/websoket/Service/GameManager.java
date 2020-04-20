@@ -33,9 +33,9 @@ public class GameManager {
  		    										.maximumSize(10)
  		    										.expireAfterAccess(10, TimeUnit.MINUTES).build();
 	
-	static private Cache<String, Object> expiredGames = CacheBuilder.newBuilder()
- 		    												.maximumSize(10)
- 		    												.expireAfterAccess(1, TimeUnit.MINUTES).build();
+//	static private Cache<String, Object> expiredGames = CacheBuilder.newBuilder()
+// 		    												.maximumSize(10)
+// 		    												.expireAfterAccess(1, TimeUnit.MINUTES).build();
 		
 	private SimpMessagingTemplate messagingTemplate;
 
@@ -68,9 +68,9 @@ public class GameManager {
 		
 		GameState game = (GameState) games.getIfPresent(gameId);
 		
-		if (game == null) {
-			game = (GameState) expiredGames.getIfPresent(gameId);
-		}
+//		if (game == null) {
+//			game = (GameState) expiredGames.getIfPresent(gameId);
+//		}
 		
 		if (game == null)
 			throw new IllegalStateException("No such game found!");
@@ -78,11 +78,11 @@ public class GameManager {
 		return game;
 	}
 
-	public void expireGame(String gameId) {
-		GameState game = (GameState) games.getIfPresent(gameId);
-		games.invalidate(gameId);		
-		expiredGames.put(gameId, game);		
-	}
+//	public void expireGame(String gameId) {
+//		GameState game = (GameState) games.getIfPresent(gameId);
+//		games.invalidate(gameId);		
+//		expiredGames.put(gameId, game);		
+//	}
 
 	public List<GameInfo> getAllGames() {
 		
@@ -198,7 +198,8 @@ public class GameManager {
 		state.react(playerId, cardId, jokerReaction);
 		
 		if (state.getStatus() == Status.GAME_OVER) {
-			expireGame(gameId);
+			//expireGame(gameId);
+			//do nothing
 		}
 
 		//return state.getPlayerState(playerId, PlayerMessage.MessageType.REACTION);
