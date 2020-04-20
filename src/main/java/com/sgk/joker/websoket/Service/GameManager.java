@@ -31,7 +31,7 @@ public class GameManager {
 	//static private Map<String, GameState> games = new ConcurrentHashMap<String, GameState>();
 	static private Cache<String, Object> games = CacheBuilder.newBuilder()
  		    										.maximumSize(10)
- 		    										.expireAfterAccess(5, TimeUnit.MINUTES).build();
+ 		    										.expireAfterAccess(10, TimeUnit.MINUTES).build();
 	
 	static private Cache<String, Object> expiredGames = CacheBuilder.newBuilder()
  		    												.maximumSize(10)
