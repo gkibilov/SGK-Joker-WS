@@ -178,8 +178,6 @@ public class GameState {
 	public void reset(String tableName) {
 		roundNumber = 0;
 		
-		this.status = Status.NOT_STARTED;
-		
 		//full reset
 		if(tableName != null) {
 			this.gameId = ((Long)random.nextLong()).toString();
@@ -187,9 +185,12 @@ public class GameState {
 		}
 		else {
 			for (Player p : players.values()) {
-				p.reset();
+				//if it is a restart shift players by one position
+				p.reset(this.status == Status.GAME_OVER);
 			}
 		}
+		
+		this.status = Status.NOT_STARTED;
 	}
 
 	public boolean isGameOn() {

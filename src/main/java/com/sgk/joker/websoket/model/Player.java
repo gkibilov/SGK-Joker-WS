@@ -76,7 +76,7 @@ public final class Player {
 		this.bonusMultipliers = bonusMultipliers;
 	}
 	
-	public void reset() {
+	public void reset(boolean bShift) {
 		this.call = null;
 		this.taken = 0;
 		this.calls.clear();
@@ -87,6 +87,10 @@ public final class Player {
 		this.cantCallNumer = null;
 		this.bWantsAll = false;
 		this.bonusMultipliers.clear();
+		
+		if (bShift) {
+			this.position = (this.position == 4 ? 1 : (this.position +1));
+		}
 	}
 
 	
