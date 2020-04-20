@@ -178,6 +178,9 @@ public class GameState {
 	public void reset(String tableName) {
 		roundNumber = 0;
 		
+		cardNumbers.clear();
+		this.prevPlay = null;
+		
 		//full reset
 		if(tableName != null) {
 			this.gameId = ((Long)random.nextLong()).toString();

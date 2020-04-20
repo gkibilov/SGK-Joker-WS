@@ -87,6 +87,7 @@ public final class Player {
 		this.cantCallNumer = null;
 		this.bWantsAll = false;
 		this.bonusMultipliers.clear();
+		this.pulkaScores.clear();
 		
 		if (bShift) {
 			this.position = (this.position == 4 ? 1 : (this.position +1));
